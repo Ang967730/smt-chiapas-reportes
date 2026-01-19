@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secretaría de Movilidad y Transporte - Chiapas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-50 space-y-3"></div>
+
+    <!-- ====================================== -->
+    <!-- LANDING PAGE -->
+    <!-- ====================================== -->
+    <div id="landing-page" class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-40 border-b border-gray-200">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center space-x-4">
+                        <!-- Logo personalizable -->
+                        <div class="w-14 h-14 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
+                            <!-- Puedes reemplazar el ícono por: <img src="logo.png" alt="SMT" class="w-12 h-12 object-contain"> -->
+                            <i class="fas fa-bus text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900 tracking-tight">Secretaría de Movilidad</h1>
+                            <p class="text-sm text-emerald-700 font-medium">Gobierno del Estado de Chiapas</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="showLogin()" class="px-5 py-2.5 text-gray-700 hover:text-emerald-700 font-semibold transition-colors rounded-lg hover:bg-emerald-50">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión
+                        </button>
+                        <button onclick="showRegister()" class="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg font-semibold shadow-lg shadow-emerald-500/30 transform hover:scale-105 transition-all">
+                            <i class="fas fa-user-plus mr-2"></i>Registrarse
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="relative py-24 px-4 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 opacity-70"></div>
+            <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%2310b981\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+            
+            <div class="max-w-7xl mx-auto text-center relative z-10">
+                <div class="inline-block mb-6 px-6 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-md">
+                    <span class="text-emerald-700 font-semibold text-sm">
+                        <i class="fas fa-shield-alt mr-2"></i>Sistema Oficial de Reportes Ciudadanos
+                    </span>
+                </div>
+                <h2 class="text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
+                    Mejora el
+                    <span class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                        Transporte Público
+                    </span>
+                    <br/>de Chiapas
+                </h2>
+                <p class="text-xl text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed">
+                    Reporta irregularidades en el transporte público, da seguimiento en tiempo real y contribuye a un servicio más seguro para todos.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="showRegister()" class="group px-10 py-5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-lg rounded-2xl font-bold shadow-2xl shadow-emerald-500/40 transform hover:scale-105 transition-all">
+                        <i class="fas fa-paper-plane mr-3 group-hover:translate-x-1 transition-transform"></i>
+                        Crear Mi Primer Reporte
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-gray-300 py-12">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid md:grid-cols-4 gap-8 mb-8">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-bus text-white"></i>
+                            </div>
+                            <span class="font-bold text-white">SMT Chiapas</span>
+                        </div>
+                        <p class="text-sm">Secretaría de Movilidad y Transporte del Estado de Chiapas</p>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-white mb-3">Contacto</h5>
+                        <ul class="space-y-2 text-sm">
+                            <li><i class="fas fa-phone mr-2"></i>961 xxx xxxx</li>
+                            <li><i class="fas fa-envelope mr-2"></i>contacto@smt.chiapas.gob.mx</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800 pt-8 text-sm text-center">
+                    <p>&copy; 2025 Secretaría de Movilidad y Transporte - Gobierno del Estado de Chiapas.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ====================================== -->
+    <!-- LOGIN PAGE -->
+    <!-- ====================================== -->
+    <div id="login-page" class="hidden min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-emerald-50 to-teal-50">
+        <div class="max-w-md w-full">
+            <div class="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100">
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i class="fas fa-user text-white text-3xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">Bienvenido de Nuevo</h2>
+                    <p class="text-gray-600 mt-2">Ingresa tus credenciales</p>
+                </div>
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-envelope mr-2 text-emerald-600"></i>Correo Electrónico
+                        </label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" placeholder="tu@email.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-emerald-600"></i>Contraseña
+                        </label>
+                        <input type="password" name="password" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-4 rounded-xl font-bold shadow-lg shadow-emerald-500/30 transform hover:scale-105 transition-all">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión
+                    </button>
+                </form>
+                <div class="mt-8 text-center space-y-3">
+                    <button onclick="showLanding()" class="text-gray-600 hover:text-emerald-700 font-medium transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Volver al Inicio
+                    </button>
+                    <div class="text-gray-500">
+                        ¿No tienes cuenta? 
+                        <button onclick="showRegister()" class="text-emerald-600 hover:text-emerald-800 font-semibold">Regístrate aquí</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================================== -->
+    <!-- REGISTER PAGE -->
+    <!-- ====================================== -->
+    <div id="register-page" class="hidden min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-teal-50 to-emerald-50">
+        <div class="max-w-2xl w-full">
+            <div class="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100">
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-teal-600 to-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i class="fas fa-user-plus text-white text-3xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">Crear Cuenta Nueva</h2>
+                    <p class="text-gray-600 mt-2">Únete y ayuda a mejorar el transporte</p>
+                </div>
+
+                <!-- Indicadores de Pasos -->
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <div id="step-1-indicator" class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold">1</div>
+                            <div class="flex-1 h-1 bg-emerald-600 mx-2"></div>
+                        </div>
+                        <p class="text-xs text-emerald-600 font-semibold mt-2">Datos</p>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <div id="step-2-indicator" class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                            <div class="flex-1 h-1 bg-gray-300 mx-2"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 font-semibold mt-2">Contacto</p>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <div id="step-3-indicator" class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold">3</div>
+                        </div>
+                        <p class="text-xs text-gray-500 font-semibold mt-2">Seguridad</p>
+                    </div>
+                </div>
+
+                <form id="register-form" onsubmit="handleRegister(event)">
+                    <!-- PASO 1 -->
+                    <div id="register-step-1" class="register-step space-y-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2 text-teal-600"></i>Nombre Completo *
+                            </label>
+                            <input type="text" id="nombre_completo" name="nombre_completo" required 
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all" 
+                                placeholder="Ej: Juan Pérez López" minlength="3">
+                        </div>
+                        <button type="button" onclick="nextRegisterStep(2)" class="w-full bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg transform hover:scale-105 transition-all">
+                            Continuar <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+
+                    <!-- PASO 2 -->
+                    <div id="register-step-2" class="register-step hidden space-y-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-envelope mr-2 text-teal-600"></i>Correo Electrónico *
+                            </label>
+                            <input type="email" id="email" name="email" required 
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all" 
+                                placeholder="tu@email.com">
+                            <div id="email-validation" class="mt-1"></div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-phone mr-2 text-teal-600"></i>Teléfono *
+                            </label>
+                            <input type="tel" id="telefono" name="telefono" required 
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all" 
+                                placeholder="961 123 4567" pattern="[0-9]{10}" maxlength="10">
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="button" onclick="nextRegisterStep(1)" class="flex-1 px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold transition-all">
+                                <i class="fas fa-arrow-left mr-2"></i>Atrás
+                            </button>
+                            <button type="button" onclick="nextRegisterStep(3)" class="flex-1 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white py-4 rounded-xl font-bold shadow-lg transform hover:scale-105 transition-all">
+                                Continuar <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 3 -->
+                    <div id="register-step-3" class="register-step hidden space-y-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-lock mr-2 text-teal-600"></i>Contraseña *
+                            </label>
+                            <input type="password" id="password" name="password" required 
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all" 
+                                placeholder="Mínimo 8 caracteres" minlength="8">
+                            <div id="password-strength" class="mt-2"></div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Confirmar Contraseña *</label>
+                            <input type="password" id="password_confirm" name="password_confirm" required 
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all" 
+                                placeholder="Repetir contraseña" minlength="8">
+                            <div id="password-match" class="mt-2"></div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="button" onclick="nextRegisterStep(2)" class="flex-1 px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold transition-all">
+                                <i class="fas fa-arrow-left mr-2"></i>Atrás
+                            </button>
+                            <button type="submit" class="flex-1 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white py-4 rounded-xl font-bold shadow-lg transform hover:scale-105 transition-all">
+                                <i class="fas fa-rocket mr-2"></i>Crear Cuenta
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="mt-8 text-center space-y-3">
+                    <button onclick="showLanding()" class="text-gray-600 hover:text-teal-700 font-medium transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Volver al Inicio
+                    </button>
+                    <div class="text-gray-500">
+                        ¿Ya tienes cuenta? 
+                        <button onclick="showLogin()" class="text-teal-600 hover:text-teal-800 font-semibold">Inicia sesión</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- ====================================== -->
+    <!-- DASHBOARD PAGE -->
+    <!-- ====================================== -->
+    <div id="dashboard-page" class="hidden min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <header class="bg-white shadow-md border-b border-gray-200 sticky top-0 z-40">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-xl flex items-center justify-center shadow-lg">
+                            <!-- Logo aquí: <img src="logo.png" alt="SMT" class="w-10 h-10 object-contain"> -->
+                            <i class="fas fa-bus text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Mi Dashboard</h1>
+                            <p class="text-sm text-gray-600">Panel de Control Personal</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="hidden md:flex items-center space-x-3 px-4 py-2 bg-emerald-50 rounded-xl">
+                            <div class="w-10 h-10 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-lg flex items-center justify-center">
+                                <span id="user-initials" class="text-white font-bold text-sm"></span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900" id="user-name"></p>
+                                <p class="text-xs text-gray-600" id="user-email-display"></p>
+                            </div>
+                        </div>
+                        <button onclick="handleLogout()" class="px-4 py-2 text-gray-700 hover:text-red-600 font-medium transition-colors rounded-lg hover:bg-red-50">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Salir
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl p-8 mb-8 shadow-xl relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-3xl font-bold text-white mb-2">¡Hola, <span id="user-name-welcome"></span>!</h2>
+                            <p class="text-emerald-100 text-lg">Gracias por contribuir a mejorar el transporte público</p>
+                        </div>
+                        <button onclick="showCreateReport()" class="hidden md:block px-8 py-4 bg-white text-emerald-700 rounded-2xl font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                            <i class="fas fa-plus-circle mr-2"></i>Nuevo Reporte
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-file-alt text-blue-600 text-2xl"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">TOTAL</span>
+                    </div>
+                    <div class="text-4xl font-bold text-gray-900 mb-1" id="total-reportes">0</div>
+                    <div class="text-sm text-gray-600 font-medium">Mis Reportes</div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-clock text-yellow-600 text-2xl"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full">EN PROCESO</span>
+                    </div>
+                    <div class="text-4xl font-bold text-yellow-600 mb-1" id="reportes-proceso">0</div>
+                    <div class="text-sm text-gray-600 font-medium">En Revisión</div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">VALIDADOS</span>
+                    </div>
+                    <div class="text-4xl font-bold text-green-600 mb-1" id="reportes-resueltos">0</div>
+                    <div class="text-sm text-gray-600 font-medium">Validados</div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-gavel text-purple-600 text-2xl"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">SANCIONADOS</span>
+                    </div>
+                    <div class="text-4xl font-bold text-purple-600 mb-1" id="reportes-sancionados">0</div>
+                    <div class="text-sm text-gray-600 font-medium">Con Sanción</div>
+                </div>
+            </div>
+
+            <div class="mb-10 md:hidden">
+                <button onclick="showCreateReport()" class="w-full py-5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl font-bold text-lg shadow-lg transform hover:scale-105 transition-all">
+                    <i class="fas fa-plus-circle mr-3"></i>Crear Nuevo Reporte
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900 flex items-center">
+                                <i class="fas fa-list-ul mr-3 text-emerald-600"></i>
+                                Mis Reportes Recientes
+                            </h2>
+                            <p class="text-gray-600 mt-1">Seguimiento en tiempo real de tus reportes</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="reports-list" class="divide-y divide-gray-100">
+                    <div class="p-12 text-center text-gray-400">
+                        <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                        <p>Cargando reportes...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- BOTÓN FLOTANTE -->
+        <button onclick="showCreateReport()" 
+            class="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-full shadow-2xl flex items-center justify-center transform hover:scale-110 transition-all z-40 pulse-button">
+            <i class="fas fa-plus text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- ====================================== -->
+    <!-- CREATE REPORT PAGE - ACTUALIZADO -->
+    <!-- ====================================== -->
+    <div id="create-report-page" class="hidden min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <header class="bg-white shadow-md border-b border-gray-200 sticky top-0 z-30">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center space-x-4">
+                        <button onclick="showDashboard()" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center transition-colors">
+                            <i class="fas fa-arrow-left text-gray-700"></i>
+                        </button>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Crear Nuevo Reporte</h1>
+                            <p class="text-sm text-gray-600">Reporta irregularidades del transporte público</p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <!-- Progress Bar -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <div id="report-step-1-indicator" class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold transition-all">1</div>
+                            <div class="flex-1 h-2 bg-emerald-600 mx-2 rounded-full transition-all"></div>
+                        </div>
+                        <p class="text-xs font-semibold text-emerald-600 mt-2">¿Qué reportar?</p>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <div id="report-step-2-indicator" class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold transition-all">2</div>
+                            <div class="flex-1 h-2 bg-gray-300 mx-2 rounded-full transition-all"></div>
+                        </div>
+                        <p class="text-xs font-semibold text-gray-500 mt-2">Detalles</p>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <div id="report-step-3-indicator" class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold transition-all">3</div>
+                            <div class="flex-1 h-2 bg-gray-300 mx-2 rounded-full transition-all"></div>
+                        </div>
+                        <p class="text-xs font-semibold text-gray-500 mt-2">Ubicación</p>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <div id="report-step-4-indicator" class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold transition-all">4</div>
+                        </div>
+                        <p class="text-xs font-semibold text-gray-500 mt-2">Confirmar</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario Multi-Paso -->
+            <form id="create-report-form" onsubmit="handleCreateReport(event)">
+                <!-- PASO 1: Tipo de Reporte -->
+                <div id="report-step-1" class="report-step bg-white rounded-3xl shadow-2xl p-8">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">¿Qué deseas reportar?</h3>
+                        <p class="text-gray-600">Selecciona el tipo de irregularidad del transporte público</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Categoría -->
+                        <div>
+                            <label class="block text-lg font-bold text-gray-900 mb-3">
+                                <i class="fas fa-tag text-emerald-600 mr-2"></i>Tipo de Reporte *
+                            </label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <label class="relative flex items-start p-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group">
+                                    <input type="radio" name="categoria" value="CONDUCTOR" required class="mt-1 mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-user-tie text-red-600 text-2xl mr-3 group-hover:scale-110 transition-transform"></i>
+                                            <span class="font-bold text-gray-900 text-lg">Conductor</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Exceso de velocidad, mal trato, conducción peligrosa</p>
+                                    </div>
+                                </label>
+
+                                <label class="relative flex items-start p-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group">
+                                    <input type="radio" name="categoria" value="UNIDAD" required class="mt-1 mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-bus text-orange-600 text-2xl mr-3 group-hover:scale-110 transition-transform"></i>
+                                            <span class="font-bold text-gray-900 text-lg">Unidad/Vehículo</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Mal estado, falta de mantenimiento, sucia</p>
+                                    </div>
+                                </label>
+
+                                <label class="relative flex items-start p-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group">
+                                    <input type="radio" name="categoria" value="SERVICIO" required class="mt-1 mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-hands-helping text-blue-600 text-2xl mr-3 group-hover:scale-110 transition-transform"></i>
+                                            <span class="font-bold text-gray-900 text-lg">Servicio</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">No respeta paradas, no da cambio, cobro excesivo</p>
+                                    </div>
+                                </label>
+
+                                <label class="relative flex items-start p-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group">
+                                    <input type="radio" name="categoria" value="DOCUMENTACION" required class="mt-1 mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-file-contract text-purple-600 text-2xl mr-3 group-hover:scale-110 transition-transform"></i>
+                                            <span class="font-bold text-gray-900 text-lg">Documentación</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Sin placas, permisos vencidos, sin tarjetón</p>
+                                    </div>
+                                </label>
+
+                                <label class="relative flex items-start p-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group">
+                                    <input type="radio" name="categoria" value="RUTA" required class="mt-1 mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-route text-teal-600 text-2xl mr-3 group-hover:scale-110 transition-transform"></i>
+                                            <span class="font-bold text-gray-900 text-lg">Ruta</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">No respeta ruta, desvíos, paradas no autorizadas</p>
+                                    </div>
+                                </label>
+
+                                <label class="relative flex items-start p-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group">
+                                    <input type="radio" name="categoria" value="OTRO" required class="mt-1 mr-3">
+                                    <div class="flex-1">
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-ellipsis-h text-gray-600 text-2xl mr-3 group-hover:scale-110 transition-transform"></i>
+                                            <span class="font-bold text-gray-900 text-lg">Otro</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Otra irregularidad no especificada</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Título del Reporte -->
+                        <div>
+                            <label class="block text-lg font-bold text-gray-900 mb-3">
+                                <i class="fas fa-heading text-amber-600 mr-2"></i>Título del Reporte *
+                            </label>
+                            <input type="text" name="tipo_infraccion" required 
+                                class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all text-lg"
+                                placeholder="Ej: Conductor excedió límite de velocidad">
+                            <p class="text-sm text-gray-500 mt-2">
+                                <i class="fas fa-lightbulb mr-1"></i>
+                                Sé específico y claro en tu título
+                            </p>
+                        </div>
+
+                        <!-- Fecha y Hora -->
+                        <div>
+                            <label class="block text-lg font-bold text-gray-900 mb-3">
+                                <i class="fas fa-calendar-alt text-purple-600 mr-2"></i>¿Cuándo ocurrió? *
+                            </label>
+                            <input type="datetime-local" name="fecha_incidente" required 
+                                class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all text-lg">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end mt-8">
+                        <button type="button" onclick="nextReportStep(2)" class="px-10 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold text-lg shadow-lg transform hover:scale-105 transition-all">
+                            Continuar <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PASO 2: Detalles -->
+                <div id="report-step-2" class="report-step hidden bg-white rounded-3xl shadow-2xl p-8">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Detalles del Incidente</h3>
+                        <p class="text-gray-600">Proporciona toda la información posible</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Descripción -->
+                        <div>
+                            <label class="block text-lg font-bold text-gray-900 mb-3">
+                                <i class="fas fa-align-left text-blue-600 mr-2"></i>Descripción Detallada *
+                            </label>
+                            <textarea name="descripcion" required rows="6" 
+                                class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all text-lg resize-none"
+                                placeholder="Describe lo que sucedió con el mayor detalle posible:
+- ¿Qué ocurrió exactamente?
+- ¿Cómo se desarrolló el incidente?
+- ¿Hubo algún perjudicado?
+- ¿Hubo testigos?"
+                                minlength="20"></textarea>
+                            <p class="text-sm text-gray-500 mt-2">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Mínimo 20 caracteres. Mientras más detalles, mejor.
+                            </p>
+                        </div>
+
+                        <!-- Información del Transporte -->
+                        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6 border-2 border-emerald-200">
+                            <h4 class="font-bold text-lg text-gray-900 mb-4">
+                                <i class="fas fa-bus text-emerald-600 mr-2"></i>Información del Transporte
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Número de Ruta
+                                    </label>
+                                    <input type="text" name="numero_ruta" 
+                                        class="w-full px-4 py-3 border-2 border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all bg-white"
+                                        placeholder="Ej: 102, Ruta A, Ruta Central">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Número Económico / Placas
+                                    </label>
+                                    <input type="text" name="numero_economico" 
+                                        class="w-full px-4 py-3 border-2 border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all bg-white"
+                                        placeholder="Ej: 1234, ABC-123-D">
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-3">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Si conoces estos datos, ayudan mucho a la investigación
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 mt-8">
+                        <button type="button" onclick="nextReportStep(1)" class="px-8 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold text-lg transition-all">
+                            <i class="fas fa-arrow-left mr-2"></i>Atrás
+                        </button>
+                        <button type="button" onclick="nextReportStep(3)" class="flex-1 px-10 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold text-lg shadow-lg transform hover:scale-105 transition-all">
+                            Continuar <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PASO 3: Ubicación - MEJORADO -->
+                <div id="report-step-3" class="report-step hidden bg-white rounded-3xl shadow-2xl p-8">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Ubicación del Incidente</h3>
+                        <p class="text-gray-600">¿Dónde ocurrió el incidente?</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Dirección -->
+                        <div>
+                            <label class="block text-lg font-bold text-gray-900 mb-3">
+                                <i class="fas fa-map-marker-alt text-green-600 mr-2"></i>Dirección o Referencia
+                            </label>
+                            <input type="text" name="ubicacion_texto" 
+                                class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all text-lg"
+                                placeholder="Ej: Av. Central Norte esquina con 5a Norte, Tuxtla Gutiérrez">
+                            <p class="text-sm text-gray-500 mt-2">
+                                Puedes incluir referencias como "Frente a..." o "A un costado de..."
+                            </p>
+                        </div>
+
+                        <!-- Mapa -->
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-bold text-lg text-gray-900">
+                                    <i class="fas fa-map text-emerald-600 mr-2"></i>Ubicación en el Mapa
+                                </h4>
+                                <button type="button" onclick="getCurrentLocation()" 
+                                    class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold transition-all flex items-center gap-2 shadow-lg">
+                                    <i class="fas fa-crosshairs"></i>
+                                    Usar Mi Ubicación
+                                </button>
+                            </div>
+                            <div id="map" class="rounded-xl overflow-hidden shadow-lg border-2 border-gray-200" style="height: 450px; width: 100%;"></div>
+                            <p class="text-sm text-gray-500 mt-3 flex items-start gap-2">
+                                <i class="fas fa-info-circle mt-1"></i>
+                                <span><strong>Haz clic en el mapa</strong> para marcar la ubicación exacta o usa el botón "Mi Ubicación" si estás en el lugar</span>
+                            </p>
+                            <input type="hidden" name="ubicacion_lat" id="lat">
+                            <input type="hidden" name="ubicacion_lng" id="lng">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 mt-8">
+                        <button type="button" onclick="nextReportStep(2)" class="px-8 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold text-lg transition-all">
+                            <i class="fas fa-arrow-left mr-2"></i>Atrás
+                        </button>
+                        <button type="button" onclick="nextReportStep(4)" class="flex-1 px-10 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold text-lg shadow-lg transform hover:scale-105 transition-all">
+                            Continuar <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PASO 4: Confirmación -->
+                <div id="report-step-4" class="report-step hidden bg-white rounded-3xl shadow-2xl p-8">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Confirmar y Enviar</h3>
+                        <p class="text-gray-600">Revisa que toda la información sea correcta</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Información del Reportante -->
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
+                            <h4 class="font-bold text-lg text-gray-900 mb-4">
+                                <i class="fas fa-user-shield text-blue-600 mr-2"></i>Tu Información de Contacto
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-600 mb-1">Nombre Completo:</p>
+                                    <p class="font-semibold text-gray-900" id="confirm-nombre">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-600 mb-1">Correo Electrónico:</p>
+                                    <p class="font-semibold text-gray-900" id="confirm-email">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-600 mb-1">Teléfono:</p>
+                                    <p class="font-semibold text-gray-900" id="confirm-telefono">-</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-blue-700 mt-3 bg-blue-100 p-3 rounded-lg">
+                                <i class="fas fa-lock mr-1"></i>
+                                Tus datos son confidenciales y solo se usarán para dar seguimiento a este reporte
+                            </p>
+                        </div>
+
+                        <!-- Declaración -->
+                        <div class="bg-amber-50 rounded-xl p-6 border-2 border-amber-200">
+                            <label class="flex items-start cursor-pointer">
+                                <input type="checkbox" name="veracidad" required class="mt-1 mr-3 w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500">
+                                <span class="text-sm text-gray-700">
+                                    <strong>Declaración de veracidad:</strong> Declaro bajo protesta de decir verdad que la información proporcionada es verídica y completa. Estoy consciente de que proporcionar información falsa puede tener consecuencias legales.
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 mt-8">
+                        <button type="button" onclick="nextReportStep(3)" class="px-8 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold text-lg transition-all">
+                            <i class="fas fa-arrow-left mr-2"></i>Atrás
+                        </button>
+                        <button type="submit" class="flex-1 px-10 py-5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold text-xl shadow-2xl transform hover:scale-105 transition-all">
+                            <i class="fas fa-paper-plane mr-3"></i>Enviar Reporte
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+<!-- ====================================== -->
+    <!-- REPORT DETAIL MODAL - MEJORADO CON SEGUIMIENTO EN TIEMPO REAL -->
+    <!-- ====================================== -->
+    <div id="report-detail-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-5xl w-full my-8 shadow-2xl">
+            <!-- Header del Modal -->
+            <div class="sticky top-0 bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6 rounded-t-3xl z-10 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h2 class="text-3xl font-bold" id="modal-folio">REP-2025-00001</h2>
+                            <span id="modal-estado-badge-header" class="px-4 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-bold">
+                                Estado
+                            </span>
+                        </div>
+                        <p class="text-emerald-100" id="modal-fecha-creacion">Creado el 10 de enero, 2025</p>
+                    </div>
+                    <button onclick="closeReportDetail()" class="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center transition-all transform hover:scale-110">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Scroll Area -->
+            <div class="overflow-y-auto" style="max-height: calc(100vh - 200px);">
+                <div class="p-8">
+                    
+                    <!-- RESUMEN DEL REPORTE -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 mb-8 border-2 border-emerald-200">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-file-alt text-emerald-600 text-2xl mr-3"></i>
+                            Resumen del Reporte
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-xl p-4 shadow-sm">
+                                <p class="text-xs text-gray-500 mb-1">Tipo de Reporte</p>
+                                <p class="font-bold text-gray-900" id="modal-categoria-resumen">-</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 shadow-sm">
+                                <p class="text-xs text-gray-500 mb-1">Título</p>
+                                <p class="font-bold text-gray-900" id="modal-tipo-resumen">-</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 shadow-sm">
+                                <p class="text-xs text-gray-500 mb-1">Fecha del Incidente</p>
+                                <p class="font-bold text-gray-900" id="modal-fecha-resumen">-</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 shadow-sm">
+                                <p class="text-xs text-gray-500 mb-1">Estado Actual</p>
+                                <p class="font-bold text-gray-900" id="modal-estado-resumen">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEGUIMIENTO EN TIEMPO REAL -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                            <i class="fas fa-route text-indigo-600 text-2xl mr-3"></i>
+                            Seguimiento en Tiempo Real
+                        </h3>
+                        
+                        <!-- Timeline Visual -->
+                        <div class="relative" id="modal-timeline">
+                            <div class="text-center text-gray-400 py-8">
+                                <i class="fas fa-clock text-4xl mb-3"></i>
+                                <p>Cargando seguimiento...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DATOS DEL REPORTANTE -->
+                    <div class="mb-8 bg-blue-50 rounded-2xl p-6 border-2 border-blue-200">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-user-shield text-blue-600 mr-2"></i>
+                            Información del Reportante
+                        </h3>
+                        <div class="bg-white rounded-xl p-5">
+                            <div class="grid md:grid-cols-3 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-600 mb-1">Nombre:</p>
+                                    <p class="font-semibold text-gray-900" id="modal-reportante-nombre">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-600 mb-1">Email:</p>
+                                    <p class="font-semibold text-gray-900" id="modal-reportante-email">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-600 mb-1">Teléfono:</p>
+                                    <p class="font-semibold text-gray-900" id="modal-reportante-telefono">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descripción Detallada -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-align-left text-blue-600 mr-2"></i>
+                            Descripción Detallada
+                        </h3>
+                        <div class="bg-gray-50 rounded-xl p-5">
+                            <p class="text-gray-700 leading-relaxed" id="modal-descripcion">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Información del Vehículo -->
+                    <div id="modal-vehiculo-info" class="mb-8 hidden">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-bus text-red-600 mr-2"></i>
+                            Información del Transporte
+                        </h3>
+                        <div class="bg-gray-50 rounded-xl p-5">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-sm text-gray-600 mb-1">Número de Ruta</p>
+                                    <p class="font-semibold text-gray-900" id="modal-numero-ruta">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600 mb-1">Número Económico / Placas</p>
+                                    <p class="font-semibold text-gray-900" id="modal-numero-economico">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ubicación -->
+                    <div id="modal-ubicacion-info" class="mb-8 hidden">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-map-marker-alt text-green-600 mr-2"></i>
+                            Ubicación del Incidente
+                        </h3>
+                        <div class="bg-gray-50 rounded-xl p-5">
+                            <p class="text-gray-700 mb-4" id="modal-ubicacion">-</p>
+                            <div id="modal-map" class="h-64 rounded-xl overflow-hidden border-2 border-gray-200 hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- Comentarios -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-comments text-teal-600 mr-2"></i>
+                            Comentarios y Actualizaciones
+                        </h3>
+                        <div id="modal-comentarios" class="space-y-3 mb-4">
+                            <p class="text-gray-500 text-sm text-center py-4">Sin comentarios aún</p>
+                        </div>
+
+                        <!-- Agregar comentario -->
+                        <form onsubmit="addComment(event)" class="bg-gray-50 rounded-xl p-4">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Agregar un comentario o pregunta
+                            </label>
+                            <textarea name="comentario" rows="3" required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                                placeholder="Escribe tu comentario o pregunta sobre este reporte..."></textarea>
+                            <button type="submit" class="mt-3 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all shadow-lg transform hover:scale-105">
+                                <i class="fas fa-paper-plane mr-2"></i>Enviar Comentario
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="sticky bottom-0 bg-gray-50 p-6 rounded-b-3xl border-t border-gray-200 flex gap-4">
+                <button onclick="closeReportDetail()" class="flex-1 px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold transition-all">
+                    <i class="fas fa-times mr-2"></i>Cerrar
+                </button>
+                <button onclick="window.print()" class="px-6 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all">
+                    <i class="fas fa-print mr-2"></i>Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
